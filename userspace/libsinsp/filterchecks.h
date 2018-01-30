@@ -282,6 +282,7 @@ public:
 		TYPE_LNET = 30,
 		TYPE_RNET = 31,
 		TYPE_IS_CONNECTED = 32,
+		TYPE_IS_DIFFERENT_ADDR = 33,
 	};
 
 	enum fd_type

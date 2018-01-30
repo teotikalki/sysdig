@@ -3202,6 +3202,13 @@ void sinsp_parser::parse_rw_exit(sinsp_evt *evt)
 
 					scap_fd_type fdtype = evt->m_fdinfo->m_type;
 
+					if(!evt->m_fdinfo->is_socket_connected())
+					{
+						// If the socket is not connected and the address
+						// changed, the address is considered new
+						evt->m_fdinfo->m_is_different_addr = true;
+					}
+
 					if(fdtype == SCAP_FD_IPV4_SOCK)
 					{
 						if(evt->m_fdinfo->is_role_none())
@@ -3228,6 +3235,10 @@ void sinsp_parser::parse_rw_exit(sinsp_evt *evt)
 					{
 						evt->m_fdinfo->m_name = evt->get_param_as_str(tupleparam, &parstr, sinsp_evt::PF_SIMPLE);
 					}
+				}
+				else
+				{
+					evt->m_fdinfo->m_is_different_addr = false;
 				}
 			}
 
@@ -3297,6 +3308,13 @@ void sinsp_parser::parse_rw_exit(sinsp_evt *evt)
 
 					scap_fd_type fdtype = evt->m_fdinfo->m_type;
 
+					if(!evt->m_fdinfo->is_socket_connected())
+					{
+						// If the socket is not connected and the address
+						// changed, the address is considered new
+						evt->m_fdinfo->m_is_different_addr = true;
+					}
+
 					if(fdtype == SCAP_FD_IPV4_SOCK)
 					{
 						if(evt->m_fdinfo->is_role_none())
@@ -3323,6 +3341,10 @@ void sinsp_parser::parse_rw_exit(sinsp_evt *evt)
 					{
 						evt->m_fdinfo->m_name = enter_evt->get_param_as_str(tupleparam, &parstr, sinsp_evt::PF_SIMPLE);
 					}
+				}
+				else
+				{
+					evt->m_fdinfo->m_is_different_addr = false;
 				}
 			}
 

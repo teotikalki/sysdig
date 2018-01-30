@@ -167,7 +167,7 @@ const filtercheck_field_info sinsp_filter_check_fd_fields[] =
 	{PT_IPV4NET, EPF_NONE, PF_NA, "fd.lnet", "local IP network."},
 	{PT_IPV4NET, EPF_NONE, PF_NA, "fd.rnet", "remote IP network."},
 	{PT_BOOL, EPF_NONE, PF_NA, "fd.connected", "for TCP/UDP FDs, 'true' if the socket is connected."},
-
+	{PT_BOOL, EPF_NONE, PF_NA, "fd.is_different_addr", "for UDP FDs, 'true' if the most recently seen address differed from the address previously associated with this FD. For all other fds, returns false."}
 };
 
 sinsp_filter_check_fd::sinsp_filter_check_fd()
@@ -1047,7 +1047,25 @@ uint8_t* sinsp_filter_check_fd::extract(sinsp_evt *evt, OUT uint32_t* len, bool 
 
 			m_tbool = m_fdinfo->is_socket_connected();
 
-			return (uint8_t*)&m_tbool;
+			RETURN_EXTRACT_VAR(m_tbool);
+		}
+		break;
+	case TYPE_IS_DIFFERENT_ADDR:
+		{
+			if(m_fdinfo == NULL)
+			{
+				return NULL;
+			}
+
+			if(m_fdinfo->is_socket_connected())
+			{
+				m_tbool = false;
+				RETURN_EXTRACT_VAR(m_tbool);
+			}
+
+			m_tbool = m_fdinfo->is_different_addr();
+
+			RETURN_EXTRACT_VAR(m_tbool);
 		}
 		break;
 	default:

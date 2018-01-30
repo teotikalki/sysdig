@@ -110,6 +110,7 @@ public:
 		m_type = other.m_type;
 		m_openflags = other.m_openflags;	
 		m_sockinfo = other.m_sockinfo;
+		m_is_different_addr = other.m_is_different_addr;
 		m_name = other.m_name;
 		m_flags = other.m_flags;
 		m_ino = other.m_ino;
@@ -290,6 +291,11 @@ public:
 		return (m_flags & FLAGS_SOCKET_CONNECTED) == FLAGS_SOCKET_CONNECTED;
 	}
 
+	inline bool is_different_addr()
+	{
+		return m_is_different_addr;
+	}
+
 	scap_fd_type m_type; ///< The fd type, e.g. file, directory, IPv4 socket...
 	uint32_t m_openflags; ///< If this FD is a file, the flags that were used when opening it. See the PPM_O_* definitions in driver/ppm_events_public.h.
 	
@@ -298,6 +304,10 @@ public:
 	  This is uninitialized for non-socket FDs.
 	*/
 	sinsp_sockinfo m_sockinfo;
+
+	// Set to true when a new ip address is set for a socket,
+	// replacing the current address.
+	bool m_is_different_addr;
 
 	string m_name; ///< Human readable rendering of this FD. For files, this is the full file name. For sockets, this is the tuple. And so on.
 
